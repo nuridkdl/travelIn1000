@@ -1,3 +1,3 @@
 # travelIn1000
 
-Travel Incheon in 1000 won (or similar project)
+인천 관광 여행 
