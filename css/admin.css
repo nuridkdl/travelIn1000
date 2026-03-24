@@ -1,0 +1,495 @@
+/* Override body for admin panel to take full width */
+.admin-body {
+    background-color: var(--color-bg);
+}
+
+/* Let the app layout constraint not apply to admin */
+.admin-body #app {
+    max-width: none;
+    box-shadow: none;
+}
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--color-bg);
+}
+
+.radial-nav {
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    z-index: 1000;
+}
+
+.radial-nav::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+    z-index: -1;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.radial-nav.active::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+.radial-toggle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: white;
+    border: none;
+    box-shadow: 0 4px 16px rgba(29, 78, 216, 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 10;
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), box-shadow 0.3s;
+}
+
+.radial-nav.active .radial-toggle {
+    transform: rotate(45deg);
+    box-shadow: 0 6px 20px rgba(29, 78, 216, 0.6);
+}
+
+.radial-items {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.radial-item {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    opacity: 0;
+    transform: translate(0, 0) scale(0) rotate(-45deg);
+    z-index: 5;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.radial-item.active {
+    color: var(--color-primary);
+    background: var(--color-light);
+    border-color: var(--color-primary);
+    z-index: 20; /* Elevate active state */
+}
+
+.radial-item:hover {
+    color: var(--color-primary);
+    background: var(--color-light);
+    border-color: var(--color-primary);
+    z-index: 30; /* Strongly elevate on hover to prevent overlapping with active items */
+}
+
+.radial-nav.active .radial-item {
+    opacity: 1;
+}
+
+/* Spreading right (0deg) to bottom (90deg) for 3 items (Closer radius: 85px) */
+.radial-nav.active #radial-btn-app { transform: translate(85px, 0px) scale(1); } /* App */
+.radial-nav.active #radial-btn-board { transform: translate(60px, 60px) scale(1); } /* Board */
+.radial-nav.active #radial-btn-logout { transform: translate(0px, 85px) scale(1); } /* Logout */
+
+.radial-label {
+    position: absolute;
+    top: 60px;
+    white-space: nowrap;
+    font-size: 1rem;
+    font-weight: 500;
+    color: white;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    z-index: 10;
+}
+
+.radial-item:hover .radial-label {
+    opacity: 1;
+    visibility: visible;
+}
+
+#radial-btn-app .radial-label,
+#radial-btn-board .radial-label {
+    top: 50%;
+    left: 62px;
+    transform: translateY(-50%);
+}
+
+/* Main Area */
+.admin-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.admin-topbar {
+    height: 70px;
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px 0 120px; /* Leave space for pure floating FAB */
+}
+
+.admin-topbar h1 {
+    font-size: 1.25rem;
+    color: var(--color-text-main);
+}
+
+.admin-profile {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+.admin-content-inner {
+    padding: 40px 40px 40px 120px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Board Management Tabs */
+.board-tabs-wrapper {
+    margin-bottom: 24px;
+    display: flex;
+}
+
+.board-tabs {
+    display: inline-flex;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 6px;
+    overflow: auto; /* horizontally scrollable if needed */
+    max-width: 100%;
+}
+
+.board-tab {
+    padding: 10px 24px;
+    border-radius: var(--radius-full);
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.board-tab.active {
+    background: var(--color-surface);
+    color: var(--color-primary);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.board-sub {
+    display: none;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+.board-sub.active-sub {
+    display: block;
+}
+
+/* Sections - removed bouncing fade animations */
+.admin-section {
+    display: none;
+}
+.admin-section.active-section {
+    display: block;
+}
+
+.split-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+@media (max-width: 1024px) {
+    .split-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.panel {
+    padding: 30px;
+    border-radius: 4px;
+    background-color: var(--color-surface);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+    border: 1px solid var(--color-border);
+}
+
+.panel h3 {
+    margin-bottom: 24px;
+    color: var(--color-text-main);
+    font-size: 1.2rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 12px;
+}
+
+.mt-4 {
+    margin-top: 24px;
+}
+
+/* Prevent panels and tabs from bouncing on click inherited from style.css */
+.panel.card:active,
+.admin-tab:active,
+.btn-primary:active {
+    transform: none !important;
+}
+
+/* Forms - Cleaned Up */
+.admin-form .form-group {
+    margin-bottom: 20px;
+}
+
+.admin-form .form-group.row {
+    display: flex;
+    gap: 20px;
+}
+
+.admin-form .form-group.row .col {
+    flex: 1;
+}
+
+.admin-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+}
+
+.admin-form input[type="text"],
+.admin-form input[type="url"],
+.admin-form input[type="date"],
+.admin-form textarea,
+.admin-form select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+    background-color: var(--color-bg);
+}
+
+.admin-form input:focus,
+.admin-form textarea:focus,
+.admin-form select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background-color: var(--color-surface);
+}
+
+/* Styled File Input */
+.file-upload-wrapper {
+    position: relative;
+    width: 100%;
+    height: 48px;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.file-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.file-upload-btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px dashed var(--color-border);
+    background-color: var(--color-bg);
+    color: var(--color-text-main);
+    font-weight: 500;
+    font-size: 0.95rem;
+    z-index: 1;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.file-input:hover + .file-upload-btn {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background-color: var(--color-light);
+}
+
+.form-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-secondary);
+}
+
+/* Table */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.admin-table th {
+    font-weight: 600;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.admin-table td {
+    font-size: 0.95rem;
+    color: var(--color-text-main);
+}
+
+.btn-text {
+    background: none;
+    border: none;
+    color: #ef4444; /* red for delete */
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.btn-text:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Admin */
+@media (max-width: 768px) {
+    .admin-layout {
+        flex-direction: column;
+    }
+    .admin-sidebar {
+        width: 100% !important;
+        border-right: none;
+        border-bottom: 1px solid var(--color-border);
+    }
+    .sidebar-header {
+        display: none; /* simple mode on mobile */
+    }
+    .sidebar-nav {
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 0;
+    }
+    .admin-tab {
+        border-left: none;
+        border-bottom: 3px solid transparent;
+        white-space: nowrap;
+        padding: 16px;
+    }
+    .admin-tab.active {
+        border-left-color: transparent;
+        border-bottom-color: var(--color-primary);
+    }
+    .tab-text {
+        display: inline !important;
+    }
+    .admin-topbar {
+        padding: 0 20px;
+    }
+    .admin-content-inner {
+        padding: 20px;
+    }
+    .admin-form .form-group.row {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+.large-date-picker::-webkit-calendar-picker-indicator {
+    padding: 8px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    transform: scale(1.5);
+    margin-right: 4px;
+}
+
+.route-tag-item {
+    background: var(--color-light);
+    color: var(--color-primary);
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.route-tag-item button {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+

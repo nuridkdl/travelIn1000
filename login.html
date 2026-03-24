@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - Incheon Travel</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.css" />
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .auth-layout {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-bg);
+            padding: 20px;
+        }
+        .auth-card {
+            background-color: var(--color-surface);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 25px rgba(29, 78, 216, 0.05);
+            text-align: center;
+            border: 1px solid var(--color-border);
+        }
+        .auth-title {
+            font-size: 1.5rem;
+            color: var(--color-primary);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .auth-subtitle {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            margin-bottom: 30px;
+        }
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .input-wrap {
+            text-align: left;
+        }
+        .input-wrap label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-text-main);
+        }
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            background-color: var(--color-bg);
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px var(--color-light);
+            background-color: var(--color-surface);
+        }
+        .btn-auth {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+        .btn-auth:hover {
+            background-color: var(--color-secondary);
+        }
+        
+        .auth-links {
+            margin-top: 24px;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            color: var(--color-text-muted);
+        }
+        .auth-links a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+        .sns-login-divider {
+            position: relative;
+            text-align: center;
+            margin: 30px 0;
+            color: var(--color-text-muted);
+            font-size: 0.85rem;
+        }
+        .sns-login-divider::before,
+        .sns-login-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 20%;
+            height: 1px;
+            background-color: var(--color-border);
+        }
+        .sns-login-divider::before { left: 0; }
+        .sns-login-divider::after { right: 0; }
+        
+        .sns-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .btn-sns {
+            width: 100%;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1px solid var(--color-border);
+            transition: all 0.2s;
+        }
+        .btn-kakao { background-color: #FEE500; color: #000; border-color: #FEE500; }
+        .btn-kakao:hover { background-color: #FDD800; }
+        .btn-naver { background-color: #03C75A; color: #fff; border-color: #03C75A; }
+        .btn-naver:hover { background-color: #02b350; }
+        .btn-google { background-color: white; color: #333; }
+        .btn-google:hover { background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <div class="auth-layout">
+        <div class="auth-card">
+            <h1 class="auth-title">INCHEON TRAVEL</h1>
+            <p class="auth-subtitle">인천 여행의 시작, 로그인해주세요.</p>
+            
+            <form id="login-form" class="auth-form">
+                <div class="input-wrap">
+                    <label>이메일 또는 아이디</label>
+                    <input type="text" id="login-id" class="input-field" placeholder="admin 또는 test@user.com 입력" required>
+                </div>
+                <div class="input-wrap">
+                    <label>비밀번호</label>
+                    <input type="password" id="login-pw" class="input-field" placeholder="비밀번호" required>
+                </div>
+                <button type="submit" class="btn-auth">이메일로 로그인</button>
+            </form>
+
+            <div class="auth-links">
+                <a href="signup.html">회원가입</a>
+                <span>|</span>
+                <a href="index.html">게스트로 둘러보기</a>
+            </div>
+
+            <div class="sns-login-divider">또는 SNS로 시작하기</div>
+
+            <div class="sns-buttons">
+                <!-- Mock buttons for SNS login -->
+                <button class="btn-sns btn-kakao" onclick="mockSnsLogin('kakao')">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 4C7.03 4 3 7.218 3 11.188c0 2.551 1.706 4.786 4.316 6.096l-1.096 4.098c-.12.448.204.536.5.34l4.646-3.085c.21.01.423.015.634.015 4.97 0 9-3.218 9-7.188S16.97 4 12 4M3.77 15.626"/></svg>
+                    카카오 로그인
+                </button>
+                <button class="btn-sns btn-naver" onclick="mockSnsLogin('naver')">
+                    <span style="font-weight: 900; font-size: 1.1rem; line-height:1;">N</span>
+                    네이버 로그인
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('login-id').value;
+            
+            if (id.toLowerCase() === 'admin') {
+                localStorage.setItem('currentUser', 'admin');
+                alert('관리자 계정으로 로그인되었습니다.');
+                window.location.href = 'admin.html';
+            } else {
+                localStorage.setItem('currentUser', 'general');
+                alert(id + '님 환영합니다!');
+                window.location.href = 'index.html';
+            }
+        });
+
+        function mockSnsLogin(provider) {
+            localStorage.setItem('currentUser', 'general');
+            localStorage.setItem('snsProvider', provider);
+            alert(provider.toUpperCase() + ' 계정으로 연동 로그인되었습니다!');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

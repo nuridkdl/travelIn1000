@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인천, 천의 매력 - Incheon Travel</title>
+    <!-- Google Fonts: Pretendard for clean Korean typography -->
+    <link rel="stylesheet" as="style" crossorigin href="https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.css" />
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Top Header -->
+        <header class="app-header">
+            <div class="header-container">
+                <h1 class="logo">INCHEON TRAVEL</h1>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main id="app-content">
+            <!-- Section 0: 메인 (Home) -->
+            <section id="home" class="view active-view">
+                <div class="view-header">
+                    <h2>인천으로 떠나는<br>완벽한 여행</h2>
+                    <p>지금 바로 당신만의 여행을 시작해보세요.</p>
+                </div>
+                <div class="content-container">
+                    <!-- Home Dashboard Content can go here, e.g. quick links or hero image -->
+                    <div class="card route-card" style="margin-bottom: 20px;">
+                        <div class="card-image bg-blue-300 placeholder-img">
+                            <span>인천 여행 시작하기</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 1: 추천여행경로 -->
+            <section id="routes" class="view">
+                <div class="view-header">
+                    <h2>추천 여행 경로</h2>
+                    <p>인천 구석구석, 숨겨진 명소를 찾아보세요.</p>
+                </div>
+                <div class="content-container routes-grid" id="routes-container">
+                    <!-- Placeholders for routes -->
+                </div>
+            </section>
+
+            <!-- Section 2: 여행 쿠폰 리스트 -->
+            <section id="coupons" class="view">
+                <div class="view-header">
+                    <h2>여행 쿠폰 리스트</h2>
+                    <p>특별한 혜택으로 더욱 풍성한 인천 여행을 즐겨보세요.</p>
+                </div>
+                <div class="content-container coupons-list" id="coupons-container">
+                    <!-- Placeholders for coupons -->
+                </div>
+            </section>
+
+            <!-- Section 3: 갤러리 -->
+            <section id="gallery" class="view" style="position: relative;">
+                <div class="view-header">
+                    <h2>갤러리</h2>
+                    <p>인천의 빛나는 순간들.</p>
+                </div>
+                <div class="content-container">
+                    <div class="gallery-grid" id="gallery-container">
+                        <!-- Placeholders for gallery -->
+                    </div>
+                </div>
+                <button onclick="window.openGalleryForm()" id="fab-add-gallery" style="position:absolute; bottom:20px; right:20px; width:56px; height:56px; border-radius:50%; background:var(--color-primary); color:white; border:none; box-shadow:0 4px 12px rgba(29,78,216,0.3); z-index:90; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+            </section>
+
+            <!-- Section 4: 마이페이지 -->
+            <section id="mypage" class="view">
+                <div class="view-header">
+                    <h2>마이페이지</h2>
+                    <p>나의 여행 기록과 저장된 쿠폰을 확인하세요.</p>
+                </div>
+                <div class="content-container mypage-content">
+                    <div class="profile-header-new">
+                        <div class="avatar-new">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                        <div class="profile-info-new">
+                            <h3 id="user-display-name">여행자 님</h3>
+                            <span class="role-badge" id="user-role-badge">일반 회원</span>
+                        </div>
+                    </div>
+
+                    <div class="stats-card">
+                        <div class="stat-item">
+                            <span class="stat-value">2</span>
+                            <span class="stat-label">저장한 장소</span>
+                        </div>
+                        <div class="stat-divider"></div>
+                        <div class="stat-item">
+                            <span class="stat-value">5</span>
+                            <span class="stat-label">보유 쿠폰</span>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <button class="menu-btn-new">
+                            <div class="menu-icon-bg"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>
+                            <span>내 쿠폰함</span>
+                            <svg class="chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                        </button>
+                        <button class="menu-btn-new" style="border-top: 1px solid var(--color-border);">
+                            <div class="menu-icon-bg"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg></div>
+                            <span>저장한 경로</span>
+                            <svg class="chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                        </button>
+                    </div>
+
+                    <div class="menu-card" id="admin-menu-card" style="display: none; border: 2px solid var(--color-secondary);">
+                        <a href="admin.html" class="menu-btn-new" style="text-decoration: none;">
+                            <div class="menu-icon-bg" style="background: var(--color-primary); color: white;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                            <span style="color: var(--color-primary); font-weight: 700;">관리자 페이지 이동</span>
+                            <svg class="chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: Gallery Detail -->
+            <section id="gallery-detail" class="view">
+                <div class="view-header" style="display: flex; align-items: center; gap: 16px;">
+                    <button onclick="switchView('gallery')" style="background:none; border:none; color:var(--color-primary); cursor:pointer;">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    </button>
+                    <div>
+                        <h2 style="margin-bottom:4px;">상세보기</h2>
+                        <p style="margin-bottom:0;">갤러리 상세 설명</p>
+                    </div>
+                </div>
+                <div class="content-container">
+                    <div id="gallery-detail-img" style="width:100%; height:300px; border-radius:8px; background-size:cover; background-position:center; margin-bottom:24px;"></div>
+                    <div id="gallery-detail-text" style="font-size:1rem; color:var(--color-text-main); white-space:pre-wrap; line-height:1.7; margin-bottom:24px;"></div>
+                    <div id="gallery-detail-actions" style="display:none; gap:12px; margin-bottom:24px;">
+                        <button class="btn-full" style="background:var(--color-border); color:var(--color-text-main); flex:1;" onclick="window.editCurrentGallery()">수정</button>
+                        <button class="btn-full" style="background:#fef2f2; color:#ef4444; border:1px solid #fecaca; flex:1;" onclick="window.deleteCurrentGallery()">삭제</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 6: Coupon Use -->
+            <section id="coupon-use" class="view">
+                <div class="view-header" style="display: flex; align-items: center; gap: 16px;">
+                    <button onclick="switchView('coupons')" style="background:none; border:none; color:var(--color-primary); cursor:pointer;">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    </button>
+                    <div>
+                        <h2 style="margin-bottom:4px;">쿠폰 사용하기</h2>
+                        <p style="margin-bottom:0;">혜택을 사용하기 위한 인증 절차입니다.</p>
+                    </div>
+                </div>
+                <div class="content-container">
+                    <div class="card" style="padding:24px; text-align:center; margin-bottom:24px; border:2px dashed var(--color-primary);">
+                        <h3 id="coupon-use-title" style="font-size:1.5rem; color:var(--color-text-main); margin-bottom:8px;"></h3>
+                        <p id="coupon-use-desc" style="font-size:1rem; color:var(--color-text-muted);"></p>
+                    </div>
+                    <div id="coupon-use-action" style="margin-top:auto;"></div>
+                </div>
+            </section>
+
+            <!-- Section 7: Gallery Form -->
+            <section id="gallery-form-view" class="view">
+                <div class="view-header" style="display: flex; align-items: center; gap: 16px;">
+                    <button onclick="window.cancelGalleryEdit()" style="background:none; border:none; color:var(--color-primary); cursor:pointer;">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    </button>
+                    <div>
+                        <h2 style="margin-bottom:4px;">갤러리 글쓰기</h2>
+                        <p style="margin-bottom:0;">멋진 순간을 공유해주세요.</p>
+                    </div>
+                </div>
+                <div class="content-container">
+                    <form id="app-gallery-form" style="display:flex; flex-direction:column; gap:16px; margin-bottom:24px;">
+                        <div style="border:1px dashed var(--color-primary); border-radius:8px; padding:24px; text-align:center; background:var(--color-light); cursor:pointer; position:relative;">
+                            <input type="file" id="app-gallery-file" accept="image/*" style="opacity:0; position:absolute; inset:0; width:100%; height:100%; cursor:pointer;">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--color-primary)" stroke-width="1.5" style="margin-bottom:8px; display:inline-block;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            <div id="app-gallery-file-name" style="color:var(--color-primary); font-weight:600;">클릭 또는 터치하여 사진 등록</div>
+                        </div>
+                        <textarea id="app-gallery-caption" rows="5" maxlength="3000" placeholder="사진에 대한 이야기나 설명을 자유롭게 적어주세요..." style="width:100%; padding:16px; border:1px solid var(--color-border); border-radius:8px; font-family:inherit; resize:none;"></textarea>
+                        <div style="display:flex; gap:12px; margin-top:8px;">
+                            <button type="button" class="btn-full" style="background:var(--color-border); color:var(--color-text-main); flex:1;" onclick="window.cancelGalleryEdit()">취소</button>
+                            <button type="submit" id="btn-submit-gallery" class="btn-full" style="flex:2;">공유하기</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-container">
+                <button class="nav-item" data-target="routes">
+                    <div class="icon-wrap">
+                        <svg viewBox="0 0 24 24" fill="none" class="nav-icon"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <span>경로</span>
+                </button>
+                <button class="nav-item" data-target="coupons">
+                    <div class="icon-wrap">
+                        <svg viewBox="0 0 24 24" fill="none" class="nav-icon"><path d="M20 12V22H4V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 7H2v5h20V7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 22V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <span>쿠폰</span>
+                </button>
+                
+                <!-- Main Center Button -->
+                <button class="nav-item nav-item-main active" data-target="home">
+                    <div class="icon-wrap icon-main-wrap">
+                        <svg viewBox="0 0 24 24" fill="none" class="nav-icon"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                </button>
+
+                <button class="nav-item" data-target="gallery">
+                    <div class="icon-wrap">
+                        <svg viewBox="0 0 24 24" fill="none" class="nav-icon"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="21 15 16 10 5 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <span>갤러리</span>
+                </button>
+                <button class="nav-item" data-target="mypage">
+                    <div class="icon-wrap">
+                        <svg viewBox="0 0 24 24" fill="none" class="nav-icon"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <span>마이</span>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Application Logic -->
+    <script src="js/main.js"></script>
+</body>
+</html>
