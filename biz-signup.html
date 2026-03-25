@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사장님 입점 신청 - Korea Travel</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.css" />
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .auth-layout { min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: var(--color-bg); padding: 20px; }
+        .auth-card { background-color: var(--color-surface); width: 100%; max-width: 480px; padding: 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid var(--color-border); }
+        .auth-title { font-size: 1.5rem; color: var(--color-primary); font-weight: 700; margin-bottom: 8px; text-align: center; }
+        .auth-subtitle { font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 30px; text-align: center; }
+        .auth-form { display: flex; flex-direction: column; gap: 16px; }
+        .input-wrap label { display: block; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600; color: var(--color-text-main); }
+        .input-field { width: 100%; padding: 14px 16px; border: 1px solid var(--color-border); background-color: var(--color-bg); font-size: 1rem; transition: border-color 0.2s, box-shadow 0.2s; }
+        .input-field:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 2px 6px rgba(0,0,0,0.04); background-color: var(--color-surface); }
+        .btn-auth { width: 100%; padding: 16px; background-color: var(--color-primary); color: var(--color-surface); border: 1px solid var(--color-border); box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 10px; transition: background-color 0.2s; }
+        .btn-auth:hover { background-color: var(--color-secondary); }
+        .auth-footer { margin-top: 24px; text-align: center; font-size: 0.9rem; color: var(--color-text-muted); line-height: 1.6; }
+        .auth-footer a { color: var(--color-primary); text-decoration: none; font-weight: 600; }
+        .auth-footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="auth-layout">
+        <div class="auth-card">
+            <h1 class="auth-title">사장님 입점 신청</h1>
+            <p class="auth-subtitle">Korea Travel과 함께 비즈니스를 키워보세요.</p>
+            
+            <form id="biz-signup-form" class="auth-form">
+                <div class="input-wrap">
+                    <label>대표 이메일 (로그인 ID)</label>
+                    <input type="email" class="input-field" placeholder="biz@email.com" required>
+                </div>
+                <div class="input-wrap">
+                    <label>비밀번호</label>
+                    <input type="password" class="input-field" placeholder="8자리 이상 문자/숫자" required>
+                </div>
+                
+                <hr style="border:none; border-top:1px dashed var(--color-border); margin: 8px 0;">
+                
+                <div class="input-wrap">
+                    <label>상호명 (가게 이름)</label>
+                    <input type="text" id="biz-name" class="input-field" placeholder="예: 인천 차이나타운 짬뽕" required>
+                </div>
+                <div class="input-wrap">
+                    <label>사업자 등록번호</label>
+                    <input type="text" id="biz-number" class="input-field" placeholder="000-00-00000" required>
+                </div>
+                <div class="input-wrap">
+                    <label>대표자 연락처</label>
+                    <input type="text" id="biz-phone" class="input-field" placeholder="010-0000-0000" required>
+                </div>
+
+                <button type="submit" class="btn-auth">입점 신청하기</button>
+            </form>
+
+            <div class="auth-footer">
+                일반 여행자이신가요? <a href="signup.html">일반 회원가입 가기</a><br>
+                이미 입점 승인이 완료되셨나요? <a href="login.html">로그인하기</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('biz-signup-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const bizName = document.getElementById('biz-name').value;
+            // Mock saving biz owner data and pending state
+            const pendingList = JSON.parse(localStorage.getItem('pendingBizList') || '[]');
+            pendingList.push({
+                id: Date.now(),
+                name: bizName,
+                status: 'pending',
+                date: new Date().toISOString().split('T')[0]
+            });
+            localStorage.setItem('pendingBizList', JSON.stringify(pendingList));
+            
+            alert(`[${bizName}] 입점 신청이 완료되었습니다!\n최고관리자의 승인 이후 서비스 이용이 가능합니다.`);
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

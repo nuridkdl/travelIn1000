@@ -30,7 +30,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+    background: rgba(0,0,0,0.8);
     z-index: -1;
     opacity: 0;
     visibility: hidden;
@@ -46,10 +46,10 @@
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    color: white;
-    border: none;
-    box-shadow: 0 4px 16px rgba(29, 78, 216, 0.4);
+    background: var(--color-primary);
+    color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -60,8 +60,9 @@
 }
 
 .radial-nav.active .radial-toggle {
-    transform: rotate(45deg);
-    box-shadow: 0 6px 20px rgba(29, 78, 216, 0.6);
+    transform: rotate(45deg) translate(-2px, -2px);
+    background: var(--color-secondary);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
 }
 
 .radial-items {
@@ -82,7 +83,7 @@
     background: var(--color-surface);
     color: var(--color-text-muted);
     border: 1px solid var(--color-border);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -149,16 +150,25 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
+    position: relative;
 }
 
 .admin-topbar {
-    height: 70px;
-    background-color: var(--color-surface);
-    border-bottom: 1px solid var(--color-border);
+    height: 64px;
+    margin: 30px 40px 20px 120px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: var(--radius-full);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 40px 0 120px; /* Leave space for pure floating FAB */
+    padding: 0 32px;
+    position: sticky;
+    top: 30px;
+    z-index: 90;
 }
 
 .admin-topbar h1 {
@@ -172,7 +182,7 @@
 }
 
 .admin-content-inner {
-    padding: 40px 40px 40px 120px;
+    padding: 0 40px 40px 40px;
     flex: 1;
     overflow-y: auto;
 }
@@ -300,7 +310,7 @@
     width: 100%;
     padding: 12px 14px;
     border: 1px solid var(--color-border);
-    border-radius: 4px;
+    border-radius: 0;
     font-family: inherit;
     font-size: 0.95rem;
     transition: border-color 0.2s;
@@ -369,10 +379,11 @@
 
 .btn-primary {
     background-color: var(--color-primary);
-    color: white;
-    border: none;
+    color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
     padding: 14px 24px;
-    border-radius: 4px;
+    border-radius: 0;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
@@ -453,10 +464,12 @@
         display: inline !important;
     }
     .admin-topbar {
+        margin: 20px;
         padding: 0 20px;
+        top: 20px;
     }
     .admin-content-inner {
-        padding: 20px;
+        padding: 0 20px 20px 20px;
     }
     .admin-form .form-group.row {
         flex-direction: column;

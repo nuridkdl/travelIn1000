@@ -9,7 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
         views.forEach(view => view.classList.remove('active-view'));
 
         const activeNavItem = document.querySelector(`.nav-item[data-target="${targetId}"]`);
-        if (activeNavItem) activeNavItem.classList.add('active');
+        if (activeNavItem) {
+            activeNavItem.classList.add('active');
+            // Update sliding indicator CSS variable
+            const index = Array.from(navItems).indexOf(activeNavItem);
+            document.querySelector('.nav-container').style.setProperty('--active-index', index);
+        }
 
         const targetView = document.getElementById(targetId);
         if (targetView) targetView.classList.add('active-view');
@@ -34,10 +39,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const adminMenuCard = document.getElementById('admin-menu-card');
 
         // Update Text & Role Badge
-        if (currentUser === 'admin') {
+        if (currentUser && currentUser.startsWith('admin')) {
+            const roleNames = {
+                'admin_master': '최고 관리자',
+                'admin_manager': '일반 관리자',
+                'admin_biz': '사장님'
+            };
             if (mypageName) mypageName.innerHTML = '관리자 님';
             if (mypageRole) {
-                mypageRole.textContent = '최고 관리자';
+                mypageRole.textContent = roleNames[currentUser] || '관리자';
                 mypageRole.style.backgroundColor = '#FEE2E2';
                 mypageRole.style.color = '#DC2626';
             }
@@ -128,59 +138,54 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1500);
     };
 
+    // --- Dummy Data Initialization ---
+    const initializeDummyData = () => {
+        // 1. Unified Accounts
+        if (!localStorage.getItem('appAccounts')) {
+            localStorage.setItem('appAccounts', JSON.stringify([
+                { id: 'admin_master', name: '최고 관리자', role: 'admin_master' },
+                { id: 'admin_manager', name: '일반운영팀장', role: 'admin_manager' },
+                { id: 'admin_biz_2', name: '송도 센트럴카페', role: 'admin_biz' },
+                { id: 'admin_biz_3', name: '차이나타운 만다복', role: 'admin_biz' },
+                { id: 'admin_biz_4', name: '월미도 전망횟집', role: 'admin_biz' }
+            ]));
+        }
+
+        // 2. Unified Shops
+        if (!localStorage.getItem('bizShops')) {
+            localStorage.setItem('bizShops', JSON.stringify([
+                { bizId: 'admin_biz_2', name: '송도 센트럴카페', time: '매일 09:00 - 22:00', desc: '센트럴파크 눈부신 뷰가 보이는 스페셜티 커피 전문점입니다.' },
+                { bizId: 'admin_biz_3', name: '차이나타운 만다복', time: '매일 11:00 - 21:30', desc: '백년짜장으로 유명한 차이나타운 최고 인증 맛집.' },
+                { bizId: 'admin_biz_4', name: '월미도 전망횟집', time: '매일 11:00 - 24:00', desc: '월미도 앞바다가 훤히 보이는 신선한 활어회 한상.' }
+            ]));
+        }
+
+        // 3. Unified Routes (Force Override once for the user)
+        const currentAppData = JSON.parse(localStorage.getItem('offline_app_data') || '{"incheon_routes":[], "incheon_coupons":[], "incheon_gallery":[]}');
+        if (!localStorage.getItem('dummyRoutesForcedV2')) {
+            localStorage.setItem('dummyRoutesForcedV2', 'true');
+            currentAppData.incheon_routes = [
+                {
+                    id: 101, title: '멋들어진 송도 하루 여행', tag: ['가족여행', '분위기', '사장님추천'], colorClass: 'bg-blue-600', author: 'admin_biz_2',
+                    steps: [{ title: '센트럴파크 산책', desc: '보트를 타며 힐링하는 시간' }, { title: '송도 센트럴카페', desc: '경치를 보며 커피 한 잔의 여유' }, { title: '트라이보울 야경', desc: '미래지향적인 건축물 야경 감상' }]
+                },
+                {
+                    id: 102, title: '차이나타운 미식 투어', tag: ['맛집', '데이트', '사장님추천'], colorClass: 'bg-red-700', author: 'admin_biz_3',
+                    steps: [{ title: '만다복 백년짜장', desc: '전통 방식 그대로 만든 담백한 짜장면' }, { title: '동화마을 산책', desc: '사진 찍기 좋은 동화 테마 마을' }, { title: '자유공원 노을', desc: '짜장면 먹고 산책 코스로 추천' }]
+                },
+                {
+                    id: 103, title: '월미도 액티비티 바다 여행', tag: ['액티비티', '바다', '사장님추천'], colorClass: 'bg-blue-400', author: 'admin_biz_4',
+                    steps: [{ title: '월미 테마파크', desc: '바이킹과 디스코팡팡 타기' }, { title: '월미도 전망횟집', desc: '바다를 보며 즐기는 푸짐한 회' }, { title: '월미 바다열차', desc: '모노레일에서 보는 서해 낙조' }]
+                }
+            ];
+            localStorage.setItem('offline_app_data', JSON.stringify(currentAppData));
+        }
+    };
+    initializeDummyData();
+
     // --- Data Rendering Logic ---
     window.appData = { incheon_routes: [], incheon_coupons: [], incheon_gallery: [] };
     const getStorage = (key) => window.appData[key] || [];
-
-    window.mascotCache = {};
-    const floodFillWhiteBg = (src) => new Promise((resolve) => {
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            const w = canvas.width = img.width;
-            const h = canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
-            const imgData = ctx.getImageData(0, 0, w, h);
-            const data = imgData.data;
-            
-            const getIdx = (x, y) => (y * w + x) * 4;
-            const match = (x, y) => {
-                if(x<0 || x>=w || y<0 || y>=h) return false;
-                const i = getIdx(x, y);
-                return data[i]>240 && data[i+1]>240 && data[i+2]>240 && data[i+3]>0;
-            };
-            
-            const stack = [[0,0]];
-            while(stack.length > 0) {
-                const [x, y] = stack.pop();
-                const i = getIdx(x, y);
-                if(data[i+3] === 0) continue; 
-                if(match(x, y)) {
-                    data[i+3] = 0;
-                    if(x>0) stack.push([x-1, y]);
-                    if(x<w-1) stack.push([x+1, y]);
-                    if(y>0) stack.push([x, y-1]);
-                    if(y<h-1) stack.push([x, y+1]);
-                }
-            }
-            ctx.putImageData(imgData, 0, 0);
-            resolve(canvas.toDataURL('image/png'));
-        };
-        img.onerror = () => resolve(src);
-        img.src = src;
-    });
-
-    const preloadMascots = async () => {
-        const mascots = [
-            'incheon_seal_mascot.png', 'mascot_seagull.png', 
-            'mascot_dolphin.png', 'mascot_turtle.png', 'mascot_crab.png'
-        ];
-        for (const m of mascots) {
-            if (!window.mascotCache[m]) window.mascotCache[m] = await floodFillWhiteBg(m);
-        }
-    };
 
     const saveToServer = async () => {
         try {
@@ -208,32 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 { title: '도착', desc: '' }
             ];
             
-            const mascotData = [
-                { char: 'incheon_seal_mascot.png', bg: 'bg_seal_complex.png' },
-                { char: 'mascot_seagull.png', bg: 'bg_seagull_complex.png' },
-                { char: 'mascot_dolphin.png', bg: 'bg_dolphin_complex.png' },
-                { char: 'mascot_turtle.png', bg: 'bg_turtle_complex.png' },
-                { char: 'mascot_crab.png', bg: 'bg_crab_complex.png' }
-            ];
-            const activeData = mascotData[r.id % mascotData.length];
-            const rawMascot = activeData.char;
-            const mascot = window.mascotCache[rawMascot] || rawMascot;
-            const bgImage = activeData.bg;
-            
-            let extraStyle = '';
-            // Flip the bird (seagull) to face right
-            if (mascot === 'mascot_seagull.png') {
-                extraStyle += '--mascot-dir: -1; ';
-            }
-            // Enlarge the crab
-            if (mascot === 'mascot_crab.png') {
-                extraStyle += 'width: 120px; height: 120px; top: -110px; ';
-            }
-            
             const stepperHtml = steps.map((s, idx) => `
                 <div class="step-item">
                     <div class="step-indicator">
-                        ${idx === 0 ? `<img src="${mascot}" class="walking-character" alt="동물 캐릭터" style="${extraStyle}">` : ''}
                         <div class="step-circle">${idx + 1}</div>
                         <div class="step-line"></div>
                     </div>
@@ -250,16 +232,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${r.title}
                 </h3>
                 
-                <article class="card route-card" style="padding: 24px; overflow: visible; margin-bottom: 16px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 8px 16px rgba(0,0,0,0.06); position: relative;">
-                    <!-- Background Layer bounded directly to border limits -->
-                    <div style="position: absolute; inset: 0; border-radius: var(--radius-md); overflow: hidden; z-index: 0;">
-                        <div style="position: absolute; inset: 0; background-image: url('${bgImage}'); background-size: cover; background-position: center 20%;"></div>
-                        <!-- Subtle Gradient Overlay to keep text legible at bottom without masking sky -->
-                        <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 40%, rgba(255,255,255,0.95) 75%, rgba(255,255,255,1) 100%);"></div>
-                    </div>
-                    
+                <article class="card route-card" style="padding: 24px; margin-bottom: 16px; position: relative;">
                     <div class="card-content" style="padding: 0; position: relative; z-index: 1;">
-                        <div class="route-stepper">
+                        <div class="route-stepper" style="padding-top: 10px;">
                             ${stepperHtml}
                         </div>
                     </div>
@@ -278,23 +253,55 @@ document.addEventListener('DOMContentLoaded', () => {
         const coupons = getStorage('incheon_coupons');
         if(coupons.length === 0) return;
 
-        let isOutline = false;
         container.innerHTML = coupons.map((c, i) => {
-            isOutline = !isOutline; // alternate styles
             return `
-            <div class="coupon-card">
-                <div class="coupon-left ${isOutline ? 'outline' : ''}">
-                    <div class="discount">${c.discount}</div>
-                    <div class="type">${c.type}</div>
-                </div>
-                <div class="coupon-right">
-                    <h4>${c.title}</h4>
-                    <p>${c.cond}</p>
-                    <span class="expiry">~ ${c.date.replace(/-/g, '.')} 까지</span>
-                    <button class="btn-download" onclick="window.goCouponUse(${c.id})">사용하기</button>
-                </div>
+            <div class="coupon-card-mini" data-id="${c.id}" onclick="window.showCouponDetail(${c.id}, false)">
+                <div class="mini-discount">${c.discount}</div>
+                <div class="mini-title">${c.title}</div>
             </div>
         `}).join('');
+    };
+
+    window.showCouponDetail = (couponId, isShop = false) => {
+        const coupons = getStorage('incheon_coupons') || [];
+        const coupon = coupons.find(c => c.id === couponId);
+        if (!coupon) return;
+
+        const panelId = isShop ? 'shop-coupon-detail-panel' : 'coupon-detail-panel';
+        const panel = document.getElementById(panelId);
+        if (!panel) return;
+
+        const shops = JSON.parse(localStorage.getItem('bizShops') || '[]');
+        const shop = shops.find(s => s.bizId === coupon.author);
+        const shopName = shop ? shop.name : '여행 가게';
+
+        const containerId = isShop ? 'shop-detail-coupons' : 'coupons-container';
+        const container = document.getElementById(containerId);
+        if (container) {
+            container.querySelectorAll('.coupon-card-mini').forEach(el => el.classList.remove('selected'));
+            const activeEl = container.querySelector(`[data-id="${couponId}"]`);
+            if (activeEl) activeEl.classList.add('selected');
+        }
+
+        panel.innerHTML = `
+            <div style="border-top: 1px solid var(--color-border); padding-top: 16px; margin-top: 8px; animation: slideDown 0.3s ease;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div>
+                        <div style="font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 4px;">${shopName}</div>
+                        <div style="font-size: 1rem; font-weight: 700; color: var(--color-text-main); line-height: 1.3;">${coupon.title}</div>
+                    </div>
+                    <div style="font-size: 1.4rem; font-family: var(--font-title); font-weight: 800; color: var(--color-text-main);">${coupon.discount}</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div style="font-size: 0.75rem; color: var(--color-text-muted);">
+                        ~${coupon.date.replace(/-/g, '.')} 까지
+                    </div>
+                    <button onclick="window.goCouponUse(${coupon.id})" style="background: var(--color-text-main); color: var(--color-surface); border: none; padding: 8px 16px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">쿠폰 사용</button>
+                </div>
+            </div>
+        `;
+        
+        panel.style.display = 'block';
     };
 
     const renderGallery = () => {
@@ -311,23 +318,109 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     };
 
+    window.goShopDetail = (bizId) => {
+        const shops = JSON.parse(localStorage.getItem('bizShops') || '[]');
+        const shop = shops.find(s => s.bizId === bizId);
+        if (!shop) return;
+        
+        document.getElementById('shop-detail-title').textContent = shop.name;
+        document.getElementById('shop-detail-time').textContent = '영업시간: ' + shop.time;
+        document.getElementById('shop-detail-desc').textContent = shop.desc;
+
+        const imgEl = document.getElementById('shop-detail-img');
+        if (imgEl) {
+            const LOCAL_IMAGES = [
+                'images/incheon_chinatown.png',
+                'images/songdo_central_park.png',
+                'images/wolmido_sunset.png'
+            ];
+            const imgIndex = [...shop.bizId].reduce((acc, char) => acc + char.charCodeAt(0), 0) % LOCAL_IMAGES.length;
+            
+            imgEl.innerHTML = '<div style="position:absolute; inset:0; background: linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.3) 100%); z-index:1;"></div>';
+            imgEl.style.position = 'relative';
+            imgEl.style.backgroundImage = `url('${LOCAL_IMAGES[imgIndex]}')`;
+            imgEl.style.backgroundSize = 'cover';
+            imgEl.style.backgroundPosition = 'center';
+            imgEl.style.borderRadius = '8px';
+            imgEl.style.boxShadow = 'inset 0 0 20px rgba(0,0,0,0.1)';
+            imgEl.style.overflow = 'hidden';
+        }
+
+        
+        const couponsContainer = document.getElementById('shop-detail-coupons');
+        const allCoupons = getStorage('incheon_coupons') || [];
+        const shopCoupons = allCoupons.filter(c => c.author === bizId);
+        
+        if (shopCoupons.length === 0) {
+            couponsContainer.innerHTML = '<div style="padding:24px; text-align:center; background:var(--color-bg); border-radius:8px; color:var(--color-text-muted); font-size:0.9rem;">현재 발급 중인 쿠폰이 없습니다.</div>';
+        } else {
+            couponsContainer.innerHTML = shopCoupons.map((c, i) => {
+                return `
+                <div class="coupon-card-mini" data-id="${c.id}" onclick="window.showCouponDetail(${c.id}, true)">
+                    <div class="mini-discount">${c.discount}</div>
+                    <div class="mini-title">${c.title}</div>
+                </div>
+                `;
+            }).join('');
+        }
+        
+        // Hide panel when swapping shop
+        const panel = document.getElementById('shop-coupon-detail-panel');
+        if (panel) {
+            panel.style.display = 'none';
+            panel.innerHTML = '';
+        }
+        
+        window.switchView('shop-detail');
+        const appContent = document.getElementById('app-content');
+        if (appContent) appContent.scrollTo({ top: 0, behavior: 'auto' });
+    };
+
+    const renderHomeShops = () => {
+        const container = document.getElementById('home-biz-shops');
+        if (!container) return;
+        const shops = JSON.parse(localStorage.getItem('bizShops') || '[]');
+        if (shops.length === 0) {
+            container.innerHTML = '<p style="text-align:center; color:var(--color-text-muted); padding:20px;">등록된 가게가 없습니다.</p>';
+            return;
+        }
+        container.innerHTML = shops.map(s => `
+            <div class="card route-card" style="padding:0; margin-bottom:0; cursor:pointer;" onclick="window.goShopDetail('${s.bizId}')">
+                <div style="display:flex; align-items:stretch; min-height: 100px;">
+                    <div style="width:100px; background:var(--color-bg); flex-shrink:0; display:flex; align-items:center; justify-content:center; color:var(--color-border); border-right:1px solid var(--color-border);">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    </div>
+                    <div style="padding:16px; flex:1;">
+                        <h4 style="margin:0 0 6px 0; font-size:1.15rem; color:var(--color-text-main); font-weight:800;">${s.name}</h4>
+                        <p style="margin:0 0 8px 0; font-size:0.85rem; color:var(--color-text-muted); line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${s.desc}</p>
+                        <span style="font-size:0.75rem; background:var(--color-light); color:var(--color-primary); padding:4px 8px; border-radius:4px; font-weight:700; white-space:nowrap; display:inline-block;">운영시간: ${s.time}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    };
+
     const initializeApp = async () => {
-        try { await preloadMascots(); } catch(e) { console.error('Mascot preload error', e); }
         try {
             const res = await fetch('/api/data');
             const data = await res.json();
             if(data) {
                 window.appData = data;
                 localStorage.setItem('offline_app_data', JSON.stringify(data));
+                renderRoutes();
+                renderCoupons();
+                renderGallery();
+                renderHomeShops();
             }
         } catch(e) {
-            console.error('Server connect failed, offline fallback', e);
+            console.error('API fetch failed, offline fallback', e);
             const offlineBackup = JSON.parse(localStorage.getItem('offline_app_data'));
             if(offlineBackup) window.appData = offlineBackup;
+            renderRoutes();
+            renderCoupons();
+            renderGallery();
+            renderHomeShops();
         }
-        renderRoutes();
-        renderCoupons();
-        renderGallery();
     };
     initializeApp();
 });
@@ -530,7 +623,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         img: base64Img,
                         large: false,
                         author: localStorage.getItem('currentUser'),
-                        colorClass: 'bg-blue-' + (Math.floor(Math.random() * 3) + 1) + '00'
+                        colorClass: ['bg-red', 'bg-green', 'bg-black'][Math.floor(Math.random() * 3)]
                     });
                 }
                 window.appData['incheon_gallery'] = gallery;

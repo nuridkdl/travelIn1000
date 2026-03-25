@@ -2,28 +2,33 @@
    CSS Variables & Theme Setup (4 Shades of Blue + Neutrals)
    ========================================================================== */
 :root {
-    /* Color Palette */
-    --color-primary: #1D4ED8;     /* Strong Blue */
-    --color-secondary: #3B82F6;   /* Bright Blue */
-    --color-accent: #93C5FD;      /* Soft Accent */
-    --color-light: #EFF6FF;       /* Light Background Accent */
+    /* Clean Minimal Palette */
+    --color-primary: #333333;      /* Dark Gray/Black */
+    --color-secondary: #666666;    /* Medium Gray */
+    --color-accent: #000000;       /* Black */
+    --color-light: #F9F9F9;        /* Off-white */
     
-    /* Neutrals */
-    --color-bg: #F8FAFC;          /* App background */
-    --color-surface: #ffffff;     /* Cards, headers */
-    --color-text-main: #0F172A;   /* Primary text */
-    --color-text-muted: #64748B;  /* Secondary text */
-    --color-border: #E2E8F0;      /* Dividers, borders */
+    --color-bg: #F5F5F7;           /* Light Gray App Background */
+    --color-surface: #FFFFFF;      /* Pure White Surface */
+    --color-text-main: #111111;    /* Almost Black Text */
+    --color-text-muted: #888888;
+    --color-border: #EEEEEE;       /* Subtle Light Border */
     
     /* Metrics */
-    --header-height: 64px;
+    --header-height: 60px;
     --nav-height: 68px;
-    --radius-md: 24px;
-    --radius-lg: 36px;
+    --radius-md: 12px;             /* Rounded Modern Corners */
+    --radius-lg: 16px;
     --radius-full: 9999px;
     
     /* Typography */
     --font-primary: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-title: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+h1, h2, h3, .view-header h1, .auth-title {
+    font-family: var(--font-title);
+    font-weight: 700;
 }
 
 /* ==========================================================================
@@ -44,6 +49,11 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* High-Resolution Monochromatic Paper Texture */
+body::after {
+    display: none;
+}
+
 /* App Layout - Mobile Focused with PC adaptability */
 #app {
     max-width: 480px; /* Constrain width for mobile app feel on desktop */
@@ -51,7 +61,9 @@ body {
     min-height: 100vh;
     background-color: var(--color-surface);
     position: relative;
-    box-shadow: 0 0 40px rgba(0,0,0,0.05);
+    border-left: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-border);
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
     display: flex;
     flex-direction: column;
 }
@@ -68,11 +80,11 @@ body {
    ========================================================================== */
 .app-header {
     height: var(--header-height);
-    background-color: var(--color-surface);
+    background-color: var(--color-bg);
     position: sticky;
     top: 0;
     z-index: 100;
-    border-bottom: 1px solid var(--color-light); /* Soft blue border instead of gray */
+    border-bottom: 2px solid var(--color-surface);
     padding: 0 20px;
 }
 
@@ -84,18 +96,15 @@ body {
 }
 
 .logo {
-    font-size: 1.125rem;
+    font-size: 1.4rem;
+    font-family: var(--font-title);
     font-weight: 700;
-    letter-spacing: -0.5px;
-    color: var(--color-primary);
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+    color: var(--color-text-main);
 }
 
 .admin-link {
-    color: var(--color-accent);
+    color: var(--color-text-main);
     display: flex;
     align-items: center;
     transition: color 0.2s ease;
@@ -131,9 +140,8 @@ body {
 
 .view-header {
     padding: 24px 20px 16px;
-    background-color: var(--color-light); /* lightest blue background */
-    border-bottom-left-radius: var(--radius-lg);
-    border-bottom-right-radius: var(--radius-lg);
+    background-color: var(--color-surface);
+    border-bottom: 2px solid var(--color-border);
     margin-bottom: 20px;
 }
 
@@ -162,11 +170,10 @@ body {
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
-    max-width: 480px; /* Matches app max-width */
+    max-width: 480px;
     height: var(--nav-height);
-    background-color: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid var(--color-light);
+    background-color: var(--color-surface);
+    border-top: 1px solid var(--color-border);
     z-index: 100;
 }
 
@@ -178,89 +185,74 @@ body {
 
 .nav-container {
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    position: relative;
     height: 100%;
-    padding: 0 10px;
+    padding: 0;
+    --active-index: 2; /* 0 to 4 */
+}
+
+/* Sliding Indicator */
+.nav-indicator {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 20%;
+    height: 52px;
+    margin-top: -26px;
+    background-color: var(--color-bg); /* Clean light gray pill matching monotonic style */
+    border-radius: var(--radius-full);
+    z-index: 0;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: translateX(calc(var(--active-index) * 100%));
 }
 
 .nav-item {
-    background: none;
-    border: none;
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    flex: 1;
-    color: var(--color-accent);
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
     cursor: pointer;
-    transition: all 0.2s ease;
-    padding: 8px 0;
+    font-size: 0.75rem;
+    font-family: var(--font-title);
+    font-weight: 600;
+    gap: 4px;
+    padding: 0;
+    z-index: 1;
     position: relative;
+    transition: color 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.nav-item.active {
+    color: var(--color-text-main);
 }
 
 .icon-wrap {
+    position: relative;
     display: flex;
-    align-items: center;
     justify-content: center;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    align-items: center;
+    height: 36px;
 }
 
 .nav-icon {
-    width: 24px;
-    height: 24px;
-    transition: transform 0.2s;
+    width: 26px;
+    height: 26px;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s;
 }
 
-.nav-item span {
-    font-size: 0.75rem;
-    font-weight: 500;
-    transition: opacity 0.2s, transform 0.2s;
+/* Active State Springs */
+.nav-item.active .nav-icon {
+    transform: translateY(0) scale(1.15);
 }
 
-/* App-like press/bounce animation */
-.nav-item:active .icon-wrap {
-    transform: scale(0.85); /* The "down" animation on press */
-}
-
-/* Active State */
-.nav-item.active {
-    color: var(--color-primary);
-}
-
-.nav-item.active .icon-wrap {
-    transform: translateY(-4px) scale(1.1);
-}
-
-.nav-item.active span {
-    transform: translateY(2px);
-}
-
-/* Center Main Button */
-.nav-item-main {
-    flex: 0 0 auto;
-    width: 60px;
-}
-
-.icon-main-wrap {
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    border-radius: 50%;
-    color: white;
-    box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
-    margin-top: -24px; /* Float above the nav bar */
-    border: 3px solid var(--color-surface);
-}
-
-.nav-item-main:active .icon-main-wrap {
-    transform: translateY(4px) scale(0.95);
-}
-
-.nav-item-main.active .icon-main-wrap {
-    transform: translateY(-4px) scale(1.05);
-    box-shadow: 0 6px 16px rgba(29, 78, 216, 0.4);
+/* Press State */
+.nav-item:active .nav-icon {
+    transform: scale(0.85); 
 }
 
 /* Utility to ensure clicks on child elements bubble nicely */
@@ -279,11 +271,22 @@ body {
 
 .card {
     background: var(--color-surface);
-    border-radius: var(--radius-md);
     overflow: hidden;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     border: 1px solid var(--color-border);
-    transition: box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+}
+
+/* Premium Traditional Pattern Watermarks */
+.card::after, .menu-card::after, .route-card::after, .stats-card::after {
+    display: none;
+}
+
+/* Elevate children above the watermark */
+.card > *, .menu-card > *, .route-card > *, .stats-card > * {
+    position: relative;
+    z-index: 1;
 }
 
 .card-image {
@@ -297,9 +300,12 @@ body {
     font-size: 1.2rem;
 }
 
-.bg-blue-100 { background: linear-gradient(135deg, var(--color-secondary), var(--color-accent)); }
-.bg-blue-200 { background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); }
-.bg-blue-300 { background: linear-gradient(135deg, var(--color-accent), var(--color-primary)); }
+.bg-blue-100 { background: var(--color-primary); color: var(--color-surface); border: 1px solid var(--color-border); }
+.bg-blue-200 { background: var(--color-secondary); color: var(--color-surface); border: 1px solid var(--color-border); }
+.bg-blue-300 { background: var(--color-accent); color: var(--color-surface); border: 1px solid var(--color-border); }
+.bg-red { background: var(--color-primary); color: var(--color-surface); border: 1px solid var(--color-border); }
+.bg-green { background: var(--color-secondary); color: var(--color-surface); border: 1px solid var(--color-border); }
+.bg-black { background: var(--color-accent); color: var(--color-surface); border: 1px solid var(--color-border); }
 
 .card-content {
     padding: 16px;
@@ -308,10 +314,11 @@ body {
 .tag {
     display: inline-block;
     padding: 6px 12px;
-    background-color: var(--color-light);
-    color: var(--color-primary);
+    background-color: var(--color-surface);
+    color: var(--color-accent);
+    border: 1px solid var(--color-border);
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 800;
     border-radius: var(--radius-full);
     margin-bottom: 8px;
 }
@@ -331,119 +338,91 @@ body {
 /* ==========================================================================
    Coupons Section
    ========================================================================== */
-.coupons-list {
+
+/* Horizontal Scroll & Mini Tickets */
+.horizontal-scroll {
     display: flex;
-    flex-direction: column;
-    gap: 16px;
+    overflow-x: auto;
+    gap: 12px;
+    padding-bottom: 12px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
 }
 
-.coupon-card {
-    display: flex;
+.horizontal-scroll::-webkit-scrollbar {
+    display: none; /* Safari/Chrome */
+}
+
+.coupon-card-mini {
+    min-width: 110px;
+    height: 72px;
+    flex-shrink: 0;
+    scroll-snap-align: start;
     background: var(--color-surface);
-    border-radius: var(--radius-md);
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    border-radius: 2px;
     border: 1px solid var(--color-border);
-    overflow: hidden;
-    position: relative;
-}
-
-/* Creating the cut-out effect */
-.coupon-card::before, .coupon-card::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: var(--color-bg);
-    border-radius: 50%;
-    top: 50%;
-    transform: translateY(-50%);
-    border: 1px solid var(--color-border);
-}
-
-.coupon-card::before { left: -10px; border-right-color: transparent; }
-.coupon-card::after { right: -10px; border-left-color: transparent; }
-
-.coupon-left {
-    padding: 24px 16px;
-    background-color: var(--color-primary);
-    color: white;
+    padding: 12px 14px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-width: 90px;
-    border-right: 2px dashed rgba(255,255,255,0.4);
-}
-
-.coupon-left.outline {
-    background-color: var(--color-surface);
-    color: var(--color-primary);
-    border-right: 2px dashed var(--color-accent);
-}
-
-.coupon-left .discount {
-    font-size: 1.5rem;
-    font-weight: 800;
-    line-height: 1;
-}
-
-.coupon-left .discount .small {
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.coupon-left .type {
-    font-size: 0.8rem;
-    margin-top: 4px;
-    opacity: 0.9;
-}
-
-.coupon-right {
-    padding: 20px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.coupon-right h4 {
-    font-size: 1.05rem;
-    color: var(--color-text-main);
-    margin-bottom: 4px;
-}
-
-.coupon-right p {
-    font-size: 0.8rem;
-    color: var(--color-text-muted);
-    margin-bottom: 12px;
-}
-
-.coupon-right .expiry {
-    font-size: 0.75rem;
-    color: var(--color-accent);
-    font-weight: 500;
-    margin-bottom: 12px;
-}
-
-.btn-download {
-    align-self: flex-start;
-    background-color: var(--color-secondary);
-    color: white;
-    border: none;
-    padding: 8px 18px;
-    border-radius: var(--radius-full);
-    font-size: 0.8rem;
-    font-weight: 600;
+    text-align: center;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.2s;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
 }
 
-.btn-download:active {
+.coupon-card-mini:active {
     transform: scale(0.95);
 }
 
-.btn-download:hover {
-    background-color: var(--color-primary);
+.coupon-card-mini:hover {
+    background: var(--color-bg);
+}
+
+.coupon-card-mini.selected {
+    background: var(--color-text-main); /* Strict deep monochromatic active */
+    border-color: var(--color-text-main);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.mini-discount {
+    font-size: 1.2rem; /* Shrunk from 1.6rem */
+    font-family: var(--font-title);
+    font-weight: 800;
+    color: var(--color-text-main);
+    margin-bottom: 4px;
+    line-height: 1;
+    letter-spacing: -0.5px;
+    transition: color 0.2s;
+}
+
+.mini-title {
+    font-size: 0.8rem; /* Shrunk from 0.85rem */
+    font-weight: 600;
+    color: var(--color-text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    transition: color 0.2s;
+}
+
+.coupon-card-mini.selected .mini-discount,
+.coupon-card-mini.selected .mini-title {
+    color: var(--color-surface);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ==========================================================================
@@ -516,13 +495,14 @@ body {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    color: white;
+    background: var(--color-primary);
+    border: 1px solid var(--color-border);
+    color: var(--color-surface);
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 16px;
-    box-shadow: 0 8px 16px rgba(29, 78, 216, 0.2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .avatar-new svg {
@@ -544,17 +524,18 @@ body {
 .role-badge {
     display: inline-block;
     padding: 6px 14px;
-    background-color: var(--color-light);
-    color: var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-surface);
     font-size: 0.85rem;
-    font-weight: 700;
+    font-weight: 800;
     border-radius: var(--radius-full);
+    border: 1px solid var(--color-border);
 }
 
 .stats-card {
     background: var(--color-surface);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid var(--color-border);
     display: flex;
     align-items: center;
     padding: 24px 0;
@@ -588,8 +569,8 @@ body {
 
 .menu-card {
     background: var(--color-surface);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid var(--color-border);
     overflow: hidden;
     margin-bottom: 16px;
 }
@@ -757,15 +738,7 @@ body {
 }
 
 .walking-character {
-    position: absolute;
-    width: 90px;
-    height: 90px;
-    object-fit: contain;
-    top: -85px;
-    left: 50%;
-    transform: translateX(-50%) scaleX(var(--mascot-dir, 1));
-    animation: floatIdle 3s ease-in-out infinite;
-    z-index: 10;
+    display: none; /* Removed for strict 4-color Korean design */
 }
 
 

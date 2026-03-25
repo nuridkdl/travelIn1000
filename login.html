@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인 - Incheon Travel</title>
+    <title>로그인 - Korea Travel</title>
     <link rel="stylesheet" as="style" crossorigin href="https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.css" />
     <link rel="stylesheet" href="css/style.css">
     <style>
@@ -20,8 +20,7 @@
             width: 100%;
             max-width: 400px;
             padding: 40px;
-            border-radius: var(--radius-lg);
-            box-shadow: 0 10px 25px rgba(29, 78, 216, 0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             text-align: center;
             border: 1px solid var(--color-border);
         }
@@ -55,7 +54,7 @@
             width: 100%;
             padding: 14px 16px;
             border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
+            border-radius: 0;
             background-color: var(--color-bg);
             font-size: 1rem;
             transition: border-color 0.2s, box-shadow 0.2s;
@@ -63,16 +62,16 @@
         .input-field:focus {
             outline: none;
             border-color: var(--color-primary);
-            box-shadow: 0 0 0 3px var(--color-light);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
             background-color: var(--color-surface);
         }
         .btn-auth {
             width: 100%;
             padding: 16px;
             background-color: var(--color-primary);
-            color: white;
-            border: none;
-            border-radius: var(--radius-md);
+            color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
@@ -126,7 +125,6 @@
         .btn-sns {
             width: 100%;
             padding: 14px;
-            border-radius: var(--radius-md);
             font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
@@ -135,26 +133,27 @@
             justify-content: center;
             gap: 8px;
             border: 1px solid var(--color-border);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
             transition: all 0.2s;
         }
-        .btn-kakao { background-color: #FEE500; color: #000; border-color: #FEE500; }
-        .btn-kakao:hover { background-color: #FDD800; }
-        .btn-naver { background-color: #03C75A; color: #fff; border-color: #03C75A; }
-        .btn-naver:hover { background-color: #02b350; }
-        .btn-google { background-color: white; color: #333; }
-        .btn-google:hover { background-color: #f8f9fa; }
+        .btn-kakao { background-color: var(--color-surface); color: var(--color-text-main); }
+        .btn-kakao:hover { background-color: var(--color-light); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .btn-naver { background-color: var(--color-secondary); color: var(--color-surface); }
+        .btn-naver:hover { background-color: var(--color-secondary); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .btn-google { background-color: var(--color-surface); color: var(--color-text-main); }
+        .btn-google:hover { background-color: var(--color-light); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
     <div class="auth-layout">
         <div class="auth-card">
-            <h1 class="auth-title">INCHEON TRAVEL</h1>
-            <p class="auth-subtitle">인천 여행의 시작, 로그인해주세요.</p>
+            <h1 class="auth-title">KOREA TRAVEL</h1>
+            <p class="auth-subtitle">대한민국 여행의 시작, 로그인해주세요.</p>
             
             <form id="login-form" class="auth-form">
                 <div class="input-wrap">
                     <label>이메일 또는 아이디</label>
-                    <input type="text" id="login-id" class="input-field" placeholder="admin 또는 test@user.com 입력" required>
+                    <input type="text" id="login-id" class="input-field" placeholder="admin_master, _manager, _biz 또는 이메일" required>
                 </div>
                 <div class="input-wrap">
                     <label>비밀번호</label>
@@ -164,9 +163,11 @@
             </form>
 
             <div class="auth-links">
-                <a href="signup.html">회원가입</a>
+                <a href="signup.html">일반가입</a>
                 <span>|</span>
-                <a href="index.html">게스트로 둘러보기</a>
+                <a href="biz-signup.html">입점신청</a>
+                <span>|</span>
+                <a href="index.html">게스트</a>
             </div>
 
             <div class="sns-login-divider">또는 SNS로 시작하기</div>
@@ -189,10 +190,15 @@
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const id = document.getElementById('login-id').value;
+            const roles = {
+                'admin_master': '최고 관리자',
+                'admin_manager': '일반 관리자',
+                'admin_biz': '사장님'
+            };
             
-            if (id.toLowerCase() === 'admin') {
-                localStorage.setItem('currentUser', 'admin');
-                alert('관리자 계정으로 로그인되었습니다.');
+            if (roles[id.toLowerCase()]) {
+                localStorage.setItem('currentUser', id.toLowerCase());
+                alert(roles[id.toLowerCase()] + ' 계정으로 로그인되었습니다.');
                 window.location.href = 'admin.html';
             } else {
                 localStorage.setItem('currentUser', 'general');
